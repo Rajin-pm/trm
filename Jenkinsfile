@@ -1,29 +1,24 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Checkout') {
-            steps {
-                git url: 'https://github.com/Rajin-pm/trm.git',
-                    credentialsId: 'github-pat'
-            }
-        }
+    environment {
+        AWS_DEFAULT_REGION = 'ap-south-1'
+    }
 
+    stages {
         stage('Terraform Init') {
             steps {
-                // Your Terraform Init steps here
+                sh 'terraform init'
             }
         }
-
         stage('Terraform Plan') {
             steps {
-                // Your Terraform Plan steps here
+                sh 'terraform plan -out=tfplan'
             }
         }
-
         stage('Terraform Apply') {
             steps {
-                // Your Terraform Apply steps here
+                sh 'terraform apply -auto-approve tfplan'
             }
         }
     }
